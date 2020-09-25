@@ -1,15 +1,14 @@
-## PROXIMITY DEVICE
+## Bluetooth tester
 
-PROXIMITY is the business solution for location-based conversations.
+This web app executes apis found at
 
-Brands can now reach their audience in context, and with confidence, providing a more powerful and consistent medium to deliver offers and messages
+https://googlechrome.github.io/samples/web-bluetooth/
 
-PROXIMITY DEVICE permits a platform user to scan for bluetooth tags attached to products, displays, shelves, and equipment to receive profiles, notifications, and other real-time infomration for the PROXIMITY publishing platform.
+The LightBlue iPhone app is a very good proxy for mocking bluetooth devices 
 
 ### Features
 
-* Implements lambda functions for mongodb actions
-* Employs geospatial search with mongodb
+
 
 ### Usage
 
