@@ -4,6 +4,8 @@ This web app executes apis found at
 
 https://googlechrome.github.io/samples/web-bluetooth/
 
+along with other custom functions as needed
+
 The LightBlue iPhone app is a very good proxy for mocking bluetooth devices 
 
 ### Features
