@@ -29,3 +29,6 @@ https://www.bluetooth.com/specifications/gatt/services/
 
 https://punchthrough.com/testing-bluetooth-low-energy-devices/
 
+* array buffer
+https://javascript.info/arraybuffer-binary-arrays
+

@@ -108,9 +108,16 @@ async function onButtonClick() {
   
           case BluetoothUUID.getCharacteristic('heart_rate_control_point'):
             log(`this fired heart rate control`)
-            // await characteristic.readValue().then(value => {
-            //   log('> Heart Rate Control Point: ' + decoder.decode(value));
-            // });
+            let number = 5
+            let hex = number.toString()
+            // allocate buffer in memory for 16 bytes
+            let buffer = new ArrayBuffer(16);
+            let view = new Uint32Array(buffer)  // buffer is a seq of 32 bit integers, or 4 bytes
+            view[0] = hex
+            await characteristic.writeValue(view).then(value => {
+              
+              log(`> Heart Rate Control Point Updated`);
+            });
             break;
          //
          case BluetoothUUID.getCharacteristic('body_sensor_location'):
@@ -179,8 +186,9 @@ async function onButtonClick() {
     }
     return result;
   }
-  function getBodySensorLocation(data) {
-    
+  function getBodySensorLocation(value) {
+      let data = value.buffer ? value : new DataView(value);
+   
       let sensorLocation = data.getUint8(0);
       log(`Data in sensor location = ${data}`)
       switch (sensorLocation) {
