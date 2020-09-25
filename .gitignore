@@ -1,0 +1,37 @@
+
+
+
+# Custom
+.editorconfig
+.env
+
+# Compiled output
+/definitions
+/bundles
+/dist
+
+# Dependencies
+/node_modules
+package-lock.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Misc
+npm-debug.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Env config
+/src/scripts/config/env.ts
+# Local Netlify folder
+.netlify
