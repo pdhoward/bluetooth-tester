@@ -1,6 +1,7 @@
-const heartButton = document.getElementById('heart')
+const heartButton = document.getElementById('heartrate')
 
-const log = (msg) => console.log(msg)
+// declared in device
+//const log = (msg) => console.log(msg)
 async function onHeartClick() {
     try {
       log('Requesting any Bluetooth Device...');
@@ -44,7 +45,9 @@ async function onHeartClick() {
             await characteristic.readValue().then(value => {
               let location = getBodySensorLocation(value)
               log(`> Body Sensor Location: ${location} `);
-            });
+            }).catch(err => {
+              log(`--------Locate Test Data is Null ----`)
+              log(err)})
             break;
          //
          case BluetoothUUID.getCharacteristic('heart_rate_measurement'):
@@ -59,6 +62,67 @@ async function onHeartClick() {
     } catch(err) {
         log(err)
     }
+}
+
+////////////////heart sensor functions////////////////
+function handleHeartRateMeasurement(heartRateMeasurement) {
+  heartRateMeasurement.addEventListener('characteristicvaluechanged', event => {
+    var heartRateMeasurement = parseHeartRate(event.target.value);
+    log(`Heart rate just changed to ${heartRateMeasurement.heartRate}`)
+    
+  });
+}
+
+function parseHeartRate(value) {
+  // In Chrome 50+, a DataView is returned instead of an ArrayBuffer.
+  value = value.buffer ? value : new DataView(value);
+  let flags = value.getUint8(0);
+  let rate16Bits = flags & 0x1;
+  let result = {};
+  let index = 1;
+  if (rate16Bits) {
+    result.heartRate = value.getUint16(index, /*littleEndian=*/true);
+    index += 2;
+  } else {
+    result.heartRate = value.getUint8(index);
+    index += 1;
+  }
+  let contactDetected = flags & 0x2;
+  let contactSensorPresent = flags & 0x4;
+  if (contactSensorPresent) {
+    result.contactDetected = !!contactDetected;
+  }
+  let energyPresent = flags & 0x8;
+  if (energyPresent) {
+    result.energyExpended = value.getUint16(index, /*littleEndian=*/true);
+    index += 2;
+  }
+  let rrIntervalPresent = flags & 0x10;
+  if (rrIntervalPresent) {
+    let rrIntervals = [];
+    for (; index + 1 < value.byteLength; index += 2) {
+      rrIntervals.push(value.getUint16(index, /*littleEndian=*/true));
+    }
+    result.rrIntervals = rrIntervals;
+  }
+  return result;
+}
+function getBodySensorLocation(value) {
+    let data = value.buffer ? value : new DataView(value);
+ 
+    let sensorLocation = data.getUint8(0);
+    log(`Data in sensor location = ${data}`)
+    switch (sensorLocation) {
+      case 0: return 'Other';
+      case 1: return 'Chest';
+      case 2: return 'Wrist';
+      case 3: return 'Finger';
+      case 4: return 'Hand';
+      case 5: return 'Ear Lobe';
+      case 6: return 'Foot';
+      default: return 'Unknown';
+    
+ }
 }
 
 heartButton.addEventListener('click', onHeartClick, false);
