@@ -1,7 +1,8 @@
-const domButton = document.getElementById('confirm')
+const domButton = document.getElementById('device')
 
+// constant log set once for the entire web app
 const log = (msg) => console.log(msg)
-async function onButtonClick() {
+async function onDeviceClick() {
     try {
       log('Requesting any Bluetooth Device...');
       const device = await navigator.bluetooth.requestDevice(
@@ -95,48 +96,7 @@ async function onButtonClick() {
           default: log('> Unknown Characteristic: ' + characteristic.uuid);
         }
       }
-      log(`-------------------------------------`)
-      log('Getting Heart Rate Service...');
-      service = await server.getPrimaryService('heart_rate');
-  
-      log('Getting Heart Rate Characteristics...');
-      characteristics = await service.getCharacteristics();
-      log(`Found ${characteristics.length} characteristics`) 
-      for (const characteristic of characteristics) {
-        log(`Exploring Heart Rate characteristic ${characteristic.uuid}`)
-        switch (characteristic.uuid) {
-  
-          case BluetoothUUID.getCharacteristic('heart_rate_control_point'):
-            log(`this fired heart rate control`)
-            let number = 5
-            let hex = number.toString()
-            // allocate buffer in memory for 16 bytes
-            let buffer = new ArrayBuffer(16);
-            let view = new Uint32Array(buffer)  // buffer is a seq of 32 bit integers, or 4 bytes
-            view[0] = hex
-            await characteristic.writeValue(view).then(value => {
-              
-              log(`> Heart Rate Control Point Updated`);
-            });
-            break;
-         //
-         case BluetoothUUID.getCharacteristic('body_sensor_location'):
-            log(`this fired locate`)
-            await characteristic.readValue().then(value => {
-              let location = getBodySensorLocation(value)
-              log(`> Body Sensor Location: ${location} `);
-            });
-            break;
-         //
-         case BluetoothUUID.getCharacteristic('heart_rate_measurement'):
-            log(`this fired heart rate`)
-            await characteristic.startNotifications().then(value => {
-              log('> Heart Rate Measurement Starting: ' )
-              handleHeartRateMeasurement(value)
-            });
-            break;
-        }
-      }
+     
     } catch(error) {
       log('Argh! ' + error);
     }
@@ -214,5 +174,5 @@ async function onButtonClick() {
         (value in valueToUsbVendorName ? ' (' + valueToUsbVendorName[value] + ')' : '');
   }
 
-  domButton.addEventListener('click', onButtonClick, false);
+  domButton.addEventListener('click', onDeviceClick, false);
   
