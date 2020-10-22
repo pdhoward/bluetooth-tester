@@ -6,8 +6,11 @@ async function onDeviceClick() {
     try {
       log('Requesting any Bluetooth Device...');
       const device = await navigator.bluetooth.requestDevice(
-        {filters:[{services:[ 'heart_rate' ]}], 
-         // acceptAllDevices: true,
+        {//filters:[{services:[ 'heart_rate' ]}],
+         filters:[{services:[ '37bb435a-4eae-47ab-aba2-750cb2a11a8d' ]},
+                  {name: 'product2'},
+                  {name: '6PNJ-GGFS9'}],
+         //acceptAllDevices: true,
          optionalServices: ['device_information']});
   
       log('Connecting to GATT Server...');
